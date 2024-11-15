@@ -4,7 +4,7 @@ from pymongo import MongoClient
 from datetime import datetime
 from Utils.postgres_tool import PostgresTool
 from Utils.random_data import load_data, save_processed_indices
-from dags.Utils.process_data import process_emails
+from Utils.process_data import process_emails
 import yaml
 import pandas as pd
 import json

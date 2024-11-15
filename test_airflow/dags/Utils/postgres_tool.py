@@ -116,12 +116,24 @@ class PostgresTool():
             logger(f'./logs/insert_{table_name}.log', emoji.emojize(error_message))
 
     def insert_multiple_tables(self, email_df, address_df, email_addresses_df):
+        """
+        Thêm dữ liệu từ các DataFrame vào các bảng tương ứng trong PostgreSQL.
+
+        Parameters:
+        - email_df (DataFrame): DataFrame chứa dữ liệu emails.
+        - address_df (DataFrame): DataFrame chứa dữ liệu addresses.
+        - email_addresses_df (DataFrame): DataFrame chứa dữ liệu email_addresses.
+        
+        Returns:
+        - None
+        """
         try:
-            self.conn.begin()
             self.insert_from_dataframe(email_df, 'Emails')
             self.insert_from_dataframe(address_df, 'Addresses')
             self.insert_from_dataframe(email_addresses_df, 'EmailAddresses')
+
             self.conn.commit()
+
             logger('./logs/insert_all_tables.log', emoji.emojize(f":check_mark_button: All data inserted successfully! :check_mark_button:"))
         except Exception as e:
             self.conn.rollback()
