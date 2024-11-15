@@ -64,17 +64,26 @@ class PostgresTool():
         return tables
     
     def insert_from_dataframe(self, df, table_name):
-        """Insert data from a DataFrame into a specified table in PostgreSQL, handling UUIDs and conflicts."""
+        """
+        Thêm dữ liệu từ DataFrame vào bảng trong PostgreSQL.
+
+        Parameters:
+        - df (DataFrame): DataFrame chứa dữ liệu cần thêm vào bảng.
+        - table_name (str): Tên bảng trong PostgreSQL.
+        
+        Returns:
+        - None
+        """
         try:
             if df.empty:
-                logger(f'./logs/insert_{table_name}.log', emoji.emojize(f":cross_mark: DataFrame is empty, nothing to insert into {table_name}."))
+                logger(f'./logs/insert_{table_name}.log', emoji.emojize(f":cross_mark: DataFrame is empty, nothing to insert into {table_name}.")) 
                 return
 
             list_columns = list(df.columns)
             primary_keys = {
                 "Emails": "email_id",
                 "Addresses": "address_id",
-                "EmailAddresses": None 
+                "EmailAddresses": None
             }
             primary_key = primary_keys.get(table_name)
 
@@ -99,10 +108,23 @@ class PostgresTool():
 
             data = [tuple(row) for row in df.itertuples(index=False, name=None)]
             self.cur.executemany(insert_stmt, data)
-            self.conn.commit()
+            # Không commit ở đây, sẽ commit sau khi tất cả các bảng hoàn tất
             logger(f'./logs/insert_{table_name}.log', emoji.emojize(f":check_mark_button: {table_name} Data batch inserted successfully! :check_mark_button:"))
-
         except Exception as e:
             self.conn.rollback()
             error_message = f":cross_mark: Error inserting data from DataFrame into {table_name}: {str(e)}"
             logger(f'./logs/insert_{table_name}.log', emoji.emojize(error_message))
+
+    def insert_multiple_tables(self, email_df, address_df, email_addresses_df):
+        try:
+            self.conn.begin()
+            self.insert_from_dataframe(email_df, 'Emails')
+            self.insert_from_dataframe(address_df, 'Addresses')
+            self.insert_from_dataframe(email_addresses_df, 'EmailAddresses')
+            self.conn.commit()
+            logger('./logs/insert_all_tables.log', emoji.emojize(f":check_mark_button: All data inserted successfully! :check_mark_button:"))
+        except Exception as e:
+            self.conn.rollback()
+            error_message = f":cross_mark: Error occurred during batch insert: {str(e)}"
+            logger('./logs/insert_all_tables.log', emoji.emojize(error_message))
+
