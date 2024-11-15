@@ -1,1 +1,10 @@
 .venv
+.env
+*.log
+*.pyc
+*.csv
+*.json
+*.png
+*.rar
+*.zip
+*.tar.gz

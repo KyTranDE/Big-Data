@@ -1,0 +1,11 @@
+pandas 
+pymongo
+emoji
+pandas
+psycopg2-binary
+python-dotenv
+requests
+tabulate
+tqdm
+PyYAML
+redis

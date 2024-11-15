@@ -1,0 +1,15 @@
+database-postgres:
+  host: 'my-postgres'
+  port: 5432
+  user: 'test'
+  password: 'test'
+  database: 'test'
+
+database-mongodb:
+  host: 'my-mongodb'
+  port: 27017
+  username: 'admin'
+  password: 'admin'
+
+url:
+  url_csv: 'https://raw.githubusercontent.com/tnhanh/data-midterm-17A/refs/heads/main/email.csv'
