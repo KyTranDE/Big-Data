@@ -24,7 +24,6 @@ def push_data_mongo(config_mongo, url_csv):
         df_json = json.loads(df_sample.to_json(orient='records'))
         db.emails.insert_many(df_json)
         print("Success MongoDB")
-        # print(processed_indices)
         save_processed_indices(processed_indices)
     except Exception as e:
         print(f"Connect failed MongoDB: {e}")
@@ -45,10 +44,7 @@ def ETL_data(config_mongo,config_postgres):
         email_addresses_df = pd.DataFrame(email_addresses_data)
         
         conn = PostgresTool(**config_postgres)
-        print(conn.get_all_table())
-        conn.insert_from_dataframe(emails_df, 'Emails')
-        conn.insert_from_dataframe(addresses_df, 'Addresses')
-        conn.insert_from_dataframe(email_addresses_df, 'EmailAddresses')
+        conn.insert_multiple_tables(emails_df, addresses_df, email_addresses_df)
         conn.close()
         print("Success Postgres")
         
@@ -57,13 +53,13 @@ def ETL_data(config_mongo,config_postgres):
         print("Drop collection")
         
     except Exception as e:
-        print(f"Connect failed MongoDB: {e}")
+        print(f"Connect failed Postgres: {e}")
         raise
 
 default_args = {
     'start_date': datetime(2024, 1, 1),
 }
-# , schedule_interval='*/5 * * * *'
+
 with DAG('kytranmoi', default_args=default_args, schedule_interval='*/5 * * * *', max_active_runs=1, concurrency=1, catchup=False) as dag:
     push_data_mongo = PythonOperator(
         task_id='push_data_mongo',

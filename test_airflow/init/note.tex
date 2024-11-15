@@ -1,0 +1,21 @@
+### Giải thích về các bảng và mối quan hệ:
+
+1. **Bảng `Emails`**
+   - **`email_id`**: UUID, là khóa chính của bảng và sẽ tự động được tạo bằng `uuid_generate_v4()`.
+   - **`date`**: Lưu trữ ngày gửi email dưới dạng chuỗi (`varchar(50)`).
+   - **`subject`**: Tiêu đề của email, kiểu `varchar(255)`.
+   - **`content`**: Nội dung của email, kiểu `text`.
+
+2. **Bảng `Addresses`**
+   - **`address_id`**: UUID, là khóa chính và tự động được tạo bằng `uuid_generate_v4()`.
+   - **`email_address`**: Địa chỉ email, kiểu `varchar(255)` và được đảm bảo duy nhất với ràng buộc `unique`.
+
+3. **Bảng `EmailAddresses`**
+   - **`email_id`**: UUID, liên kết với `email_id` trong bảng `Emails`. Trường này không thể null.
+   - **`address_id`**: UUID, liên kết với `address_id` trong bảng `Addresses`. Trường này không thể null.
+   - **`role`**: Vai trò của địa chỉ email trong email (ví dụ: 'from', 'to', 'cc'), kiểu `varchar(10)` và không thể null.
+   - **Chỉ mục duy nhất**: Tạo chỉ mục duy nhất cho ba cột `email_id`, `address_id`, và `role` trong bảng `EmailAddresses` để đảm bảo mỗi sự kết hợp này là duy nhất.
+
+### Quan hệ giữa các bảng:
+- Bảng `EmailAddresses` tạo một mối quan hệ nhiều-nhiều giữa `Emails` và `Addresses`.
+- Mỗi email có thể có nhiều địa chỉ email (với các vai trò khác nhau: 'from', 'to', 'cc'), và mỗi địa chỉ email có thể được sử dụng cho nhiều email với các vai trò khác nhau.
