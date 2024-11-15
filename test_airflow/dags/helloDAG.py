@@ -17,6 +17,20 @@ config_mongo = config['database-mongodb']
 url_csv = config['url']['url_csv']
 
 def push_data_mongo(config_mongo, url_csv):
+    """
+    Kết nối tới MongoDB đã tạo ở docker compose 
+    Load dữ liệu từ file csv với 200 dòng ngẫu nhiên
+    Chuyển dữ liệu thành dạng json và lưu vào MongoDB
+    Đồng thời lưu lại các index đã xử lý để sau này có thể xử lý tiếp
+    Insert dữ liệu vào MongoDB
+    
+    Parameters:
+    - config_mongo (dict): Thông tin kết nối tới MongoDB
+    - url_csv (str): Đường dẫn tới file csv
+    
+    Returns:
+    - None
+    """
     try:
         client = MongoClient(**config_mongo)
         db = client['test']
@@ -30,6 +44,19 @@ def push_data_mongo(config_mongo, url_csv):
         raise
 
 def ETL_data(config_mongo,config_postgres):
+    """ 
+    Kết nối tới MongoDB đã tạo ở docker compose
+    Lấy dữ liệu từ MongoDB
+    Xử lý dữ liệu
+    Insert dữ liệu vào Postgres
+    
+    Parameters:
+    - config_mongo (dict): Thông tin kết nối tới MongoDB
+    - config_postgres (dict): Thông tin kết nối tới Postgres
+    
+    Returns:
+    - None
+    """
     try:
         client = MongoClient(**config_mongo)
         db = client['test']
