@@ -2,7 +2,7 @@ from airflow import DAG
 from airflow.operators.python_operator import PythonOperator
 from pymongo import MongoClient
 from datetime import datetime
-from Utils.postgres_tool import PostgresTool
+from Utils.postgres_tool import PostgresTool    
 from Utils.random_data import load_data, save_processed_indices
 from Utils.process_data import process_emails
 import yaml

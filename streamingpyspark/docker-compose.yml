@@ -1,0 +1,13 @@
+# version: '3'
+services:
+  spark:
+    build: .
+    ports:
+      - "4040:4040"
+    depends_on:
+      - "netcat"
+  netcat:
+    image: alpine
+    command: sh -c "apk add --no-cache netcat-openbsd && nc -lk -p 9999"
+    ports:
+      - "9999:9999"
