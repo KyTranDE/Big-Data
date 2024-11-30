@@ -1,10 +1,9 @@
 .venv
-.env
+__pycache__
 *.log
 *.pyc
 *.csv
 *.json
-*.png
 *.rar
 *.zip
 *.tar.gz
